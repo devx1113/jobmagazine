@@ -373,6 +373,9 @@
     facebook: { label: 'Facebook', mark: 'f' },
   };
   const LINK_FILTERS = [['portfolio', 'ポートフォリオ'], ['x', 'X'], ['note', 'note'], ['instagram', 'Instagram'], ['facebook', 'Facebook'], ['contact', '連絡フォーム']];
+  const COPY_ICON = '<svg class="ico-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg>'
+    + '<svg class="ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>';
+  const copyBtn = (name) => `<button type="button" class="copy-btn" data-copy="${esc(name)}" aria-label="「${esc(name)}」をコピー" title="名前をコピー">${COPY_ICON}</button>`;
   const KANA_ORDER = 'あかさたなはまやらわ';
   const SIDEBAR_CATS = ['政治・社会', '経済', 'テクノロジー', '文化・カルチャー', '暮らし・ライフスタイル'];
   const TAG_LIMIT = 28;
@@ -638,7 +641,7 @@
           return `<article class="card" tabindex="0" role="button" data-idx="${w.idx}" style="--i:${i}" aria-label="${esc(w.name)}の詳細を開く">
             ${this.portrait(w)}
             <p class="card-area">${esc(w.area || w.pref)}</p>
-            <h3 class="card-name">${esc(w.name)}</h3>
+            <div class="name-row"><h3 class="card-name">${esc(w.name)}</h3>${copyBtn(w.name)}</div>
             <p class="card-kana">${esc(w.kana)}</p>
             <p class="card-catch">${esc(w.catch)}</p>
             <div class="card-tags">${shown.map((t) => `<span class="tag-mini">${esc(t)}</span>`).join('')}${w.tags.length > 4 ? `<span class="tag-mini more">+${w.tags.length - 4}</span>` : ''}</div>
@@ -653,7 +656,7 @@
         };
         $('#table').innerHTML = `<thead><tr>${th('kana', '名前')}${th('pref', '地域')}<th scope="col">業務形態</th><th scope="col">インボイス</th>${th('tags', 'タグ数')}<th scope="col">主なタグ</th>${th('new', 'ID')}</tr></thead>
           <tbody>${R.map((w) => `<tr data-idx="${w.idx}" tabindex="0">
-            <td><div class="t-person">${w.img ? `<img src="${esc(w.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-mono="${esc([...w.name][0])}">` : `<span class="t-mono">${esc([...w.name][0])}</span>`}<div><b>${esc(w.name)}</b><small>${esc(w.kana)}</small></div></div></td>
+            <td><div class="t-person">${w.img ? `<img src="${esc(w.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-mono="${esc([...w.name][0])}">` : `<span class="t-mono">${esc([...w.name][0])}</span>`}<div><b>${esc(w.name)}</b><small>${esc(w.kana)}</small></div>${copyBtn(w.name)}</div></td>
             <td>${esc(w.area || w.pref)}</td><td>${esc(w.style)}</td><td>${w.invoice ? '登録済' : '—'}</td>
             <td class="t-num">${w.tags.length}</td>
             <td class="t-tags">${w.tags.slice(0, 5).map((t) => `<span class="tag-mini">${esc(t)}</span>`).join(' ')}</td>
@@ -763,7 +766,7 @@
             ${this.portrait(w, false)}
             <div>
               <p class="d-area">◆ ${esc(w.area || w.pref)}</p>
-              <h2 class="d-name" id="drawer-name">${esc(w.name)}</h2>
+              <div class="d-name-row"><h2 class="d-name" id="drawer-name">${esc(w.name)}</h2>${copyBtn(w.name)}</div>
               <p class="d-kana">${esc(w.kana)}</p>
               <div class="d-badges">
                 ${w.style ? `<span class="chip">${esc(w.style)}</span>` : ''}
@@ -807,6 +810,29 @@
     },
 
     /* ---------- misc ---------- */
+    async copy(text, btn, msg) {
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch {
+        // Clipboard API unavailable or denied: fall back to a hidden textarea.
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        document.body.append(ta);
+        ta.select();
+        try { ok = document.execCommand('copy'); } catch { ok = false; }
+        ta.remove();
+      }
+      if (ok && btn) {
+        btn.classList.add('is-copied');
+        clearTimeout(btn.copyTimer);
+        btn.copyTimer = setTimeout(() => btn.classList.remove('is-copied'), 1400);
+      }
+      this.toast(ok ? msg : 'コピーできませんでした');
+    },
     toast(msg) {
       const t = $('#toast');
       t.textContent = msg; t.hidden = false;
@@ -862,7 +888,9 @@
       document.addEventListener('click', (e) => {
         const t = e.target;
         let el;
-        if ((el = t.closest('[data-tag]'))) { toggle(S.tags, el.dataset.tag); this.update(); }
+        if ((el = t.closest('[data-copy]'))) this.copy(el.dataset.copy, el, `「${el.dataset.copy}」をコピーしました`);
+        else if ((el = t.closest('[data-copy-all]'))) this.copy(this.results.map((w) => w.name).join('\n'), el, `${this.results.length}名の名前をコピーしました`);
+        else if ((el = t.closest('[data-tag]'))) { toggle(S.tags, el.dataset.tag); this.update(); }
         else if ((el = t.closest('[data-pref]'))) { toggle(S.prefs, el.dataset.pref); this.update(); }
         else if ((el = t.closest('[data-region]'))) {
           const prefs = this.db.writers.filter((w) => w.region === el.dataset.region).map((w) => w.pref);
@@ -921,7 +949,7 @@
         }
         if (e.key === 'Escape') $('#filters').classList.remove('is-open');
         const card = e.target.closest?.('[data-idx]');
-        if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); this.lastFocus = card; this.openDrawer(Number(card.dataset.idx)); }
+        if (card && !e.target.closest('button, a') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); this.lastFocus = card; this.openDrawer(Number(card.dataset.idx)); }
         if (e.key === '/' && !/input|textarea|select/i.test(e.target.tagName) && this.view === 'directory') { e.preventDefault(); $('#q').focus(); }
       });
       // Broken profile images fall back to a monogram.

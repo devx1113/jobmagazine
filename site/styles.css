@@ -765,6 +765,34 @@ button.chip:hover { color: var(--gold-light); border-color: var(--gold); }
 }
 .card-area { display: flex; align-items: center; gap: 6px; margin: 12px 0 0; font-size: 11.5px; color: var(--gold); letter-spacing: .04em; }
 .card-area::before { content: ""; flex: none; width: 5px; height: 5px; transform: rotate(45deg); background: var(--gold); }
+.copy-btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: #080c1a99;
+  color: var(--gold);
+  transition: color .15s, border-color .15s, background .15s, transform .12s;
+}
+.copy-btn:hover { color: var(--gold-light); border-color: var(--gold); }
+.copy-btn:active { transform: scale(.9); }
+.copy-btn svg { width: 15px; height: 15px; }
+.copy-btn .ico-check, .copy-all .ico-check, .is-copied .ico-copy { display: none; }
+.is-copied .ico-check { display: block; }
+.copy-btn.is-copied { color: #1c1508; border-color: transparent; background: linear-gradient(#f7df9f, #ddb466 52%, #b3863c); }
+.copy-all.is-copied { color: var(--gold-light); border-color: var(--gold); }
+.name-row { display: flex; align-items: flex-start; gap: 6px; margin-top: 2px; }
+.name-row .card-name { flex: 1; min-width: 0; margin: 0; }
+.name-row .copy-btn { margin-top: 2px; }
+.d-name-row { display: flex; align-items: center; gap: 12px; margin-top: 2px; }
+.d-name-row .d-name { margin: 0; }
+.d-name-row .copy-btn { width: 34px; height: 34px; }
+.d-name-row .copy-btn svg { width: 17px; height: 17px; }
+.t-person .copy-btn { width: 26px; height: 26px; margin-left: auto; }
 .card-name { margin: 2px 0 0; font-family: var(--serif); font-weight: 800; font-size: 19px; line-height: 1.4; letter-spacing: .04em; color: var(--ink); }
 .card-kana { margin: 0; font-size: 11px; color: var(--muted); letter-spacing: .08em; }
 .card-catch { margin: 8px 0 0; font-size: 13px; line-height: 1.65; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -995,6 +1023,7 @@ button.chip:hover { color: var(--gold-light); border-color: var(--gold); }
   .hero .kicker { letter-spacing: .25em; font-size: 10px; }
   .toolbar { flex-wrap: wrap; padding: 10px 12px; }
   .toolbar-right { width: 100%; justify-content: space-between; margin-left: 0; }
+  .copy-all .btn-label { display: none; }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .card { padding: 10px 10px 12px; }
   .card-name { font-size: 16px; }
