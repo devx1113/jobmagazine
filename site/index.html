@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#060913">
+<meta name="robots" content="noindex, nofollow">
+<title>ライター名鑑 データベース</title>
+<meta name="description" content="ライター名鑑に掲載されている全ライターの一覧・タグ・分析">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23f7df9f'/%3E%3Cstop offset='1' stop-color='%23b3863c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3Ctext x='32' y='43' font-size='32' text-anchor='middle' font-family='serif' font-weight='700' fill='%231c1508'%3E名%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<canvas id="sky" class="sky" aria-hidden="true"></canvas>
+<div class="site-bg" aria-hidden="true"></div>
+
+<!-- ============================== LOCK SCREEN ============================== -->
+<div class="lock-root" id="lock" data-phase="idle">
+  <div class="lock-stage" aria-hidden="true">
+    <div class="lock-parallax">
+      <div class="lock-scene">
+        <div class="lock-moon"></div>
+        <svg class="lock-mountains" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice">
+          <defs>
+            <linearGradient id="mt-far" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2448"/><stop offset="1" stop-color="#0a0f22"/></linearGradient>
+            <linearGradient id="mt-near" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e1430"/><stop offset="1" stop-color="#04060e"/></linearGradient>
+          </defs>
+          <path fill="url(#mt-far)" d="M0 260 L120 200 L210 236 L330 150 L420 210 L520 170 L640 230 L760 120 L860 200 L980 160 L1080 220 L1210 130 L1320 196 L1440 150 L1600 210 L1600 400 L0 400Z"/>
+          <path fill="none" stroke="#e8c47a" stroke-opacity=".35" stroke-width="1.2" d="M640 230 L760 120 L860 200 M1080 220 L1210 130 L1320 196"/>
+          <path fill="url(#mt-near)" d="M0 330 L160 270 L300 316 L460 250 L600 300 L780 236 L940 306 L1100 262 L1260 318 L1420 268 L1600 300 L1600 400 L0 400Z"/>
+        </svg>
+      </div>
+      <div class="lock-shafts"><span style="--r:34deg;--delay:0s;width:16vw"></span><span style="--r:47deg;--delay:-3s;width:9vw"></span><span style="--r:59deg;--delay:-6s;width:13vw"></span></div>
+      <div class="lock-rays"></div>
+    </div>
+    <div class="lock-light"></div>
+    <div class="lock-doors">
+      <div class="lock-door lock-door-left" data-medallion><span class="lock-door-frame"></span><span class="lock-door-frame lock-door-frame-inner"></span><span class="lock-door-studs"></span><span class="lock-door-handle"></span></div>
+      <div class="lock-door lock-door-right" data-medallion><span class="lock-door-frame"></span><span class="lock-door-frame lock-door-frame-inner"></span><span class="lock-door-studs"></span><span class="lock-door-handle"></span></div>
+      <span class="lock-seam"></span>
+    </div>
+    <div class="lock-vignette"></div>
+  </div>
+  <canvas class="lock-canvas" id="lock-canvas" aria-hidden="true"></canvas>
+
+  <button type="button" class="lock-sound gold-outline" id="sound-toggle" aria-pressed="true" aria-label="効果音をオフにする" title="効果音: オン">
+    <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    <svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 6 6M22 9l-6 6"/></svg>
+  </button>
+
+  <main class="lock-content">
+    <p class="brand-pill gold-outline"><span class="brand-mark gold-fill">名</span>ライター名鑑 データベース</p>
+
+    <div class="lock-emblem" aria-hidden="true">
+      <div class="lock-halo"></div>
+      <div class="lock-emblem-disc"></div>
+      <span class="lock-orbit lock-orbit-1"></span><span class="lock-orbit lock-orbit-2"></span>
+      <svg class="lock-sigil" viewBox="0 0 240 240" fill="none" stroke="currentColor">
+        <defs><path id="sigil-text-path" d="M120 120 m-100 0 a100 100 0 1 1 200 0 a100 100 0 1 1 -200 0"/></defs>
+        <g class="sigil-outer">
+          <circle cx="120" cy="120" r="112" stroke-opacity=".5"/>
+          <circle cx="120" cy="120" r="90" stroke-opacity=".35" stroke-dasharray="1 4"/>
+          <text fill="currentColor" stroke="none" fill-opacity=".8" font-size="8.5" font-weight="700" letter-spacing="2"><textPath href="#sigil-text-path" textLength="618" lengthAdjust="spacing">WRITER MEIKAN ✦ PRIVATE ARCHIVE ✦ WRITER MEIKAN ✦ PRIVATE ARCHIVE ✦</textPath></text>
+        </g>
+        <g class="sigil-shards" id="sigil-shards"></g>
+        <g class="sigil-inner">
+          <rect x="72" y="72" width="96" height="96" stroke-opacity=".28" transform="rotate(45 120 120)"/>
+          <rect x="72" y="72" width="96" height="96" stroke-opacity=".28"/>
+        </g>
+      </svg>
+      <div class="lock-padlock-wrap">
+        <svg class="lock-padlock" viewBox="0 0 120 140">
+          <defs>
+            <linearGradient id="pl-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff5d0"/><stop offset=".32" stop-color="#f2d289"/><stop offset=".7" stop-color="#c9973f"/><stop offset="1" stop-color="#7a521e"/></linearGradient>
+            <linearGradient id="pl-shackle" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#976a28"/><stop offset=".5" stop-color="#fff2c8"/><stop offset="1" stop-color="#976a28"/></linearGradient>
+            <linearGradient id="pl-shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <radialGradient id="pl-glow"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#ffe3a0" stop-opacity=".95"/><stop offset="1" stop-color="#ffc861" stop-opacity="0"/></radialGradient>
+            <clipPath id="pl-clip"><rect x="12" y="58" width="96" height="76" rx="16"/></clipPath>
+          </defs>
+          <circle class="padlock-glow" cx="60" cy="96" r="58" fill="url(#pl-glow)"/>
+          <g class="padlock-shackle"><path d="M30 62V42a30 30 0 0 1 60 0v20" fill="none" stroke="url(#pl-shackle)" stroke-width="11" stroke-linecap="round"/></g>
+          <rect x="12" y="58" width="96" height="76" rx="16" fill="url(#pl-body)" stroke="#fff4cf" stroke-opacity=".6"/>
+          <g clip-path="url(#pl-clip)"><rect class="padlock-shine" x="-40" y="50" width="30" height="100" fill="url(#pl-shine)" transform="rotate(20 60 96)"/></g>
+          <rect x="20" y="66" width="80" height="60" rx="11" fill="none" stroke="#6b4716" stroke-opacity=".35"/>
+          <path d="M60 84a9 9 0 0 0-4.5 16.8V112a4.5 4.5 0 0 0 9 0v-11.2A9 9 0 0 0 60 84z" fill="#3b2709" fill-opacity=".85"/>
+        </svg>
+      </div>
+      <span class="lock-core-flash"></span>
+      <span class="lock-ring"></span><span class="lock-ring"></span><span class="lock-ring"></span>
+    </div>
+
+    <section class="lock-panel">
+      <svg class="lock-corner lock-corner-tl" viewBox="0 0 48 48" fill="none" stroke="currentColor"><path d="M2 30V10a8 8 0 0 1 8-8h20"/><path d="M8 20v-6a6 6 0 0 1 6-6h6" stroke-opacity=".5"/><rect x="1" y="1" width="5" height="5" transform="rotate(45 3.5 3.5)" fill="currentColor" stroke="none"/></svg>
+      <svg class="lock-corner lock-corner-tr" viewBox="0 0 48 48" fill="none" stroke="currentColor"><path d="M2 30V10a8 8 0 0 1 8-8h20"/><path d="M8 20v-6a6 6 0 0 1 6-6h6" stroke-opacity=".5"/><rect x="1" y="1" width="5" height="5" transform="rotate(45 3.5 3.5)" fill="currentColor" stroke="none"/></svg>
+      <svg class="lock-corner lock-corner-bl" viewBox="0 0 48 48" fill="none" stroke="currentColor"><path d="M2 30V10a8 8 0 0 1 8-8h20"/><path d="M8 20v-6a6 6 0 0 1 6-6h6" stroke-opacity=".5"/><rect x="1" y="1" width="5" height="5" transform="rotate(45 3.5 3.5)" fill="currentColor" stroke="none"/></svg>
+      <svg class="lock-corner lock-corner-br" viewBox="0 0 48 48" fill="none" stroke="currentColor"><path d="M2 30V10a8 8 0 0 1 8-8h20"/><path d="M8 20v-6a6 6 0 0 1 6-6h6" stroke-opacity=".5"/><rect x="1" y="1" width="5" height="5" transform="rotate(45 3.5 3.5)" fill="currentColor" stroke="none"/></svg>
+
+      <p class="kicker">PRIVATE ARCHIVE</p>
+      <h1 class="lock-title">封印を解くPINコード</h1>
+      <p class="lock-sub">この名鑑は、許可された方のみ閲覧できます</p>
+      <form id="pin-form" autocomplete="off">
+        <label for="pin" class="sr-only">PINコード（15桁）</label>
+        <input id="pin" class="sr-only" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="15" autocomplete="off">
+        <div class="lock-slots" id="lock-slots" aria-hidden="true"></div>
+        <p class="lock-status" id="lock-status" aria-live="polite">0 / 15 桁</p>
+        <div class="lock-keypad" id="lock-keypad">
+          <button type="button" class="lock-key" data-key="1">1</button><button type="button" class="lock-key" data-key="2">2</button><button type="button" class="lock-key" data-key="3">3</button>
+          <button type="button" class="lock-key" data-key="4">4</button><button type="button" class="lock-key" data-key="5">5</button><button type="button" class="lock-key" data-key="6">6</button>
+          <button type="button" class="lock-key" data-key="7">7</button><button type="button" class="lock-key" data-key="8">8</button><button type="button" class="lock-key" data-key="9">9</button>
+          <button type="button" class="lock-key" data-key="clear" aria-label="すべて消去"><span class="lock-key-sub">消去</span></button>
+          <button type="button" class="lock-key" data-key="0">0</button>
+          <button type="button" class="lock-key" data-key="back" aria-label="1文字消す"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="m17 9-6 6M11 9l6 6"/></svg></button>
+        </div>
+        <button type="submit" class="lock-submit gold-fill" id="lock-submit" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.6-1.8"/></svg>
+          <span>解錠する</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <div class="lock-welcome" aria-hidden="true">
+    <p class="lock-welcome-kicker">THE SEAL IS BROKEN</p>
+    <p class="lock-welcome-title"><span style="--i:0">よ</span><span style="--i:1">う</span><span style="--i:2">こ</span><span style="--i:3">そ</span></p>
+    <div class="lock-welcome-rule"></div>
+    <p class="lock-welcome-sub">ライター名鑑 データベースへ</p>
+  </div>
+  <p class="lock-skip" aria-hidden="true">クリック / Enter でスキップ</p>
+</div>
+
+<!-- ============================== APPLICATION ============================== -->
+<div class="app" id="app" hidden>
+  <header class="topbar">
+    <a class="brand-pill gold-outline" href="#directory"><span class="brand-mark gold-fill">名</span><span class="brand-text">ライター名鑑 データベース</span></a>
+    <nav class="tabs" aria-label="表示切替">
+      <a href="#directory" data-view="directory">名鑑</a>
+      <a href="#insights" data-view="insights">分析</a>
+      <a href="#tags" data-view="tags">タグ索引</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="icon-btn gold-outline" id="export-btn" title="絞り込み結果をCSVで書き出す" aria-label="CSVで書き出す">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+      </button>
+      <button type="button" class="icon-btn gold-outline" id="relock-btn" title="再ロックする" aria-label="再ロックする">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="kicker">PRIVATE ARCHIVE · 全国のフリーライター</p>
+    <h1 class="hero-title shine-text">ライター名鑑</h1>
+    <p class="hero-sub" id="hero-sub"></p>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <main class="views">
+    <!-- Directory -->
+    <section class="view" id="view-directory" data-view="directory">
+      <div class="directory">
+        <aside class="filters panel" id="filters" aria-label="絞り込み">
+          <div class="filters-head">
+            <h2 class="panel-title">絞り込み</h2>
+            <button type="button" class="link-btn" id="filters-close">閉じる</button>
+          </div>
+          <label class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="q" placeholder="名前・ふりがな・プロフィールで検索" autocomplete="off">
+          </label>
+          <div class="facet" id="facet-tags">
+            <h3>タグ <small>すべてに該当</small></h3>
+            <label class="search search-sm"><input type="search" id="tag-q" placeholder="タグを探す" autocomplete="off"></label>
+            <div class="chips" id="tag-chips"></div>
+            <button type="button" class="link-btn" id="tag-more"></button>
+          </div>
+          <div class="facet"><h3>活動エリア</h3><div id="pref-groups"></div></div>
+          <div class="facet"><h3>対応業務 <small>すべてに該当</small></h3><div class="chips" id="service-chips"></div></div>
+          <div class="facet"><h3>業務形態</h3><div class="seg" id="style-seg"></div></div>
+          <div class="facet"><h3>インボイス</h3><div class="seg" id="invoice-seg"></div></div>
+          <div class="facet"><h3>掲載リンク</h3><div class="chips" id="link-chips"></div></div>
+        </aside>
+
+        <div class="results">
+          <div class="toolbar panel">
+            <button type="button" class="btn-ghost gold-outline" id="filters-open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>絞り込み<span class="badge" id="filter-badge"></span>
+            </button>
+            <p class="result-count" id="result-count"></p>
+            <div class="toolbar-right">
+              <label class="select"><span class="sr-only">並び順</span>
+                <select id="sort">
+                  <option value="kana">五十音順</option>
+                  <option value="new">登録が新しい順</option>
+                  <option value="tags">タグが多い順</option>
+                  <option value="pref">地域順</option>
+                </select>
+              </label>
+              <div class="seg seg-icons" role="group" aria-label="表示形式">
+                <button type="button" data-layout="grid" aria-label="カード表示" title="カード表示"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+                <button type="button" data-layout="table" aria-label="表形式" title="表形式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="active-filters" id="active-filters"></div>
+          <div class="grid" id="grid"></div>
+          <div class="table-wrap panel" id="table-wrap" hidden><table class="table" id="table"></table></div>
+          <div class="empty panel" id="empty" hidden>
+            <p class="empty-title">該当するライターが見つかりません</p>
+            <p>条件をゆるめるか、すべて解除してください。</p>
+            <button type="button" class="btn-gold gold-fill" data-clear-all>条件をすべて解除</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insights -->
+    <section class="view" id="view-insights" data-view="insights" hidden>
+      <div class="insights-head">
+        <p class="scope" id="insights-scope"></p>
+      </div>
+      <div class="insights" id="insights"></div>
+    </section>
+
+    <!-- Tag index -->
+    <section class="view" id="view-tags" data-view="tags" hidden>
+      <div class="tag-index-head panel">
+        <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="tag-index-q" placeholder="タグ名で探す" autocomplete="off"></label>
+        <div class="seg" id="tag-index-sort"><button type="button" data-sort="count" aria-pressed="true">件数順</button><button type="button" data-sort="name" aria-pressed="false">五十音順</button></div>
+        <p class="muted" id="tag-index-count"></p>
+      </div>
+      <div class="tag-index" id="tag-index"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p id="footer-meta"></p>
+  </footer>
+
+  <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <aside class="drawer" id="drawer" aria-modal="true" role="dialog" aria-labelledby="drawer-name" hidden></aside>
+  <div class="tooltip" id="tooltip" role="status" hidden></div>
+  <div class="toast" id="toast" role="status" hidden></div>
+</div>
+
+<script src="data.enc.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
